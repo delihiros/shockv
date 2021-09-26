@@ -6,6 +6,12 @@ It's best suited for experimental project which you need a lightweight data stor
 
 ## Usage
 
+### Install
+
+```
+go install github.com/delihiros/shockv@latest
+```
+
 ### Server
 
 You have to start server first. The server will handle REST request from any kind of HTTP client.
