@@ -6,11 +6,19 @@ It's best suited for experimental project which you need a lightweight data stor
 
 ## Usage
 
+### Server
+
+You have to start server first. The server will handle REST request from any kind of HTTP client.
+
 To start ShockV server:
 
 ```
 shockv server start
 ```
+
+### Client
+
+CRUD method is available through REST API. ShockV provides CLI client to ease interaction with ShockV.
 
 To make database:
 
