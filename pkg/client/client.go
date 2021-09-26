@@ -23,8 +23,8 @@ func New(baseURL string, port int) *Client {
 }
 
 func (c *Client) Get(database string, key string) (string, error) {
-	requestURL := path.Join(c.BaseURL, database, key)
-	body, err := c.get(requestURL, nil)
+	requestURL := path.Join(database, key)
+	body, err := c.get("/"+requestURL, nil)
 	if err != nil {
 		return "", err
 	}

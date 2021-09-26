@@ -128,10 +128,10 @@ func init() {
 
 	newCmd.Flags().BoolVar(&diskless, "diskless", false, "set if you want to use database with diskless mode")
 
-	getCmd.Flags().StringVarP(&key, "key", "k", "", "key you want to getCmd")
+	getCmd.Flags().StringVarP(&key, "key", "k", "", "key you want to get")
 
-	setCmd.Flags().StringVarP(&key, "key", "k", "", "key you want to setCmd")
-	setCmd.Flags().StringVarP(&value, "value", "v", "", "value you want to setCmd")
+	setCmd.Flags().StringVarP(&key, "key", "k", "", "key you want to set")
+	setCmd.Flags().StringVarP(&value, "value", "v", "", "value you want to set")
 
 	delCmd.Flags().StringVarP(&key, "key", "k", "", "key you want to delete")
 
