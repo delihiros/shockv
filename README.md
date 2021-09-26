@@ -33,7 +33,7 @@ Setting data:
 
 ```
 shockv client set --database hello --key 1 --value "xyz, abc"
-curl -X POST -H "Content-Type: application/json" -d '{"key": "1", "value": "xyz, abc"}' "http://localhost:8080/hello" -v
+curl -X POST -H "Content-Type: application/json" -d '{"key": "1", "value": "xyz, abc"}' http://localhost:8080/hello
 ```
 
 Getting the value:
@@ -47,5 +47,5 @@ Deleting the data:
 
 ```
 shockv client delete --database hello --key 1
-curl -X DELETE "http://localhost:8080/hello/1"
+curl -X DELETE http://localhost:8080/hello/1
 ```
