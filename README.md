@@ -1,7 +1,7 @@
 # ShockV
 
 ShockV is a simple key-value store based on badgerDB with RESTful API.
-It's best suited for experimental project which you need a data store.
+It's best suited for experimental project which you need a lightweight data store.
 
 
 ## Usage
