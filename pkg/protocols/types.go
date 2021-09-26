@@ -32,7 +32,7 @@ type ListRequest struct {
 
 type ListResponse struct {
 	*Response
-	Body []*Pair `json:"body"`
+	Body []string `json:"body"`
 }
 
 type DeleteRequest struct {

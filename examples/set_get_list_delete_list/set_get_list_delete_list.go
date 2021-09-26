@@ -3,46 +3,41 @@ package main
 import (
 	"log"
 
+	"github.com/delihiros/shockv/pkg/jsonutil"
+
 	"github.com/delihiros/shockv/pkg/client"
 )
 
 func main() {
 	c := client.New("http://localhost", 8080)
 	database := "hello"
-	err := c.NewDB(database, true)
+	_, err := c.NewDB(database, true)
 	if err != nil {
 		log.Println(err)
 	}
-	err = c.Set(database, "1", "abc")
+	_, err = c.Set(database, "1", "abc", 0)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
-	err = c.Set(database, "2", "def")
+	_, err = c.Set(database, "2", "def", 0)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
-	err = c.Set(database, "3", "xyz")
+	_, err = c.Set(database, "3", "xyz", 0)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
 	list, err := c.List(database)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println(list)
-	for k, v := range list {
-		log.Println(k, v)
-	}
+	jsonutil.PrintJSON(list, false)
 
-	err = c.Delete(database, "3")
+	r, err := c.Delete(database, "3")
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
+	jsonutil.PrintJSON(r, false)
 	list, err = c.List(database)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
-	for k, v := range list {
-		log.Println(k, v)
-	}
+	jsonutil.PrintJSON(list, false)
 }

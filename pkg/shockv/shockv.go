@@ -73,7 +73,7 @@ func (db *ShockV) Set(databaseName string, key string, value string, ttl int) er
 	return set(db.dbs[databaseName], key, value)
 }
 
-func (db *ShockV) List(databaseName string) (map[string]string, error) {
+func (db *ShockV) List(databaseName string) ([]string, error) {
 	return list(db.dbs[databaseName])
 }
 
@@ -90,11 +90,11 @@ func _new() (*ShockV, error) {
 	if err != nil {
 		return nil, err
 	}
-	kv, err := list(controller)
+	keys, err := list(controller)
 	if err != nil {
 		return nil, err
 	}
-	for k := range kv {
+	for _, k := range keys {
 		err = sdb.NewDiskDB(k)
 		if err != nil {
 			return nil, err
@@ -120,28 +120,24 @@ func setWithTTL(db *badger.DB, key string, value string, ttl time.Duration) erro
 	})
 }
 
-func list(db *badger.DB) (map[string]string, error) {
-	kv := map[string]string{}
+func list(db *badger.DB) ([]string, error) {
+	var keys []string
 	err := db.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
+		opts.PrefetchValues = false
 		it := txn.NewIterator(opts)
 		defer it.Close()
 		for it.Rewind(); it.Valid(); it.Next() {
 			item := it.Item()
-			err := item.Value(func(val []byte) error {
-				kv[string(item.Key())] = string(val)
-				return nil
-			})
-			if err != nil {
-				return err
-			}
+			k := item.Key()
+			keys = append(keys, string(k))
 		}
 		return nil
 	})
 	if err != nil {
 		return nil, err
 	}
-	return kv, nil
+	return keys, nil
 }
 
 func get(db *badger.DB, key string) (string, error) {

@@ -56,7 +56,7 @@ curl localhost:8080/hello/1
 ```
 shockv client list --database hello
 curl localhost:8080/hello
-{"status":200,"message":"","body":[{"key":"1","value":"xyz, abc"}]}
+{"status":200,"message":"","body":["1"]}
 ```
 
 **Deleting the data:**

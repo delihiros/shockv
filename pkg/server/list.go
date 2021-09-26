@@ -24,16 +24,12 @@ func list(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, protocols.ListResponse{Response: &protocols.Response{Status: 500}})
 	}
-	kvMap, err := db.List(req.Database)
+	keys, err := db.List(req.Database)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, protocols.ListResponse{Response: &protocols.Response{Status: 500}})
 	}
-	pairs := []*protocols.Pair{}
-	for k, v := range kvMap {
-		pairs = append(pairs, &protocols.Pair{Key: k, Value: v})
-	}
 	return c.JSON(http.StatusOK, protocols.ListResponse{
 		Response: &protocols.Response{Status: 200},
-		Body:     pairs,
+		Body:     keys,
 	})
 }
