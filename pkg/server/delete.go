@@ -28,7 +28,7 @@ func delete(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, protocols.DeleteResponse{Response: &protocols.Response{Status: 500}})
 	}
-	return c.JSON(http.StatusNoContent, protocols.DeleteResponse{
-		Response: &protocols.Response{Status: 204},
+	return c.JSON(http.StatusOK, protocols.DeleteResponse{
+		Response: &protocols.Response{Status: http.StatusOK},
 	})
 }
