@@ -1,4 +1,4 @@
-package server
+package protocols
 
 type Response struct {
 	Status  int    `json:"status"`
@@ -19,6 +19,7 @@ type SetRequest struct {
 	Database string `param:"database"`
 	Key      string `form:"key" json:"key" xml:"key"`
 	Value    string `form:"value" json:"value" xml:"value"`
+	TTL      string `form:"ttl" json:"ttl" xml:"ttl"`
 }
 
 type SetResponse struct {

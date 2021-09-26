@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/delihiros/shockv/pkg/client"
 	"github.com/delihiros/shockv/pkg/jsonutil"
 	"github.com/delihiros/shockv/pkg/server"
@@ -18,6 +16,7 @@ var (
 	key          string
 	value        string
 	diskless     bool
+	ttl          int
 )
 
 var (
@@ -36,10 +35,8 @@ var (
 		Short: "create new database",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
-			err := c.NewDB(databaseName, diskless)
-			if err != nil {
-				log.Println(err)
-			}
+			r, _ := c.NewDB(databaseName, diskless)
+			jsonutil.PrintJSON(r, format)
 		},
 	}
 
@@ -48,12 +45,8 @@ var (
 		Short: "get value by key",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
-			v, err := c.Get(databaseName, key)
-			if err != nil {
-				log.Println(err)
-			} else {
-				jsonutil.PrintJSON(v, format)
-			}
+			r, _ := c.Get(databaseName, key)
+			jsonutil.PrintJSON(r, format)
 		},
 	}
 
@@ -62,10 +55,8 @@ var (
 		Short: "set value by key",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
-			err := c.Set(databaseName, key, value)
-			if err != nil {
-				log.Println(err)
-			}
+			r, _ := c.Set(databaseName, key, value, ttl)
+			jsonutil.PrintJSON(r, format)
 		},
 	}
 
@@ -74,12 +65,8 @@ var (
 		Short: "list keys and values",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
-			kv, err := c.List(databaseName)
-			if err != nil {
-				log.Println(err)
-			} else {
-				jsonutil.PrintJSON(kv, format)
-			}
+			r, _ := c.List(databaseName)
+			jsonutil.PrintJSON(r, format)
 		},
 	}
 
@@ -88,10 +75,8 @@ var (
 		Short: "delete by key",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
-			err := c.Delete(databaseName, key)
-			if err != nil {
-				log.Println(err)
-			}
+			r, _ := c.Delete(databaseName, key)
+			jsonutil.PrintJSON(r, format)
 		},
 	}
 
@@ -127,6 +112,7 @@ func init() {
 
 	setCmd.Flags().StringVarP(&key, "key", "k", "", "key you want to set")
 	setCmd.Flags().StringVarP(&value, "value", "v", "", "value you want to set")
+	setCmd.Flags().IntVarP(&ttl, "ttl", "t", 0, "ttl second you want to set")
 
 	delCmd.Flags().StringVarP(&key, "key", "k", "", "key you want to delete")
 

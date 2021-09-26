@@ -3,12 +3,13 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
 	"strconv"
+
+	"github.com/delihiros/shockv/pkg/protocols"
 )
 
 type Client struct {
@@ -23,65 +24,65 @@ func New(baseURL string, port int) *Client {
 	}
 }
 
-func (c *Client) Get(database string, key string) (string, error) {
+func (c *Client) Get(database string, key string) (*protocols.GetResponse, error) {
 	requestURL := path.Join(database, key)
 	body, err := c.get("/"+requestURL, nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	r := &GetResponse{}
+	r := &protocols.GetResponse{}
 	err = json.Unmarshal(body, r)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	if r.Status != http.StatusOK {
-		return "", fmt.Errorf("not found %v/%v: status = %v", database, key, r.Status)
-	}
-	return r.Body, nil
+	return r, nil
 }
 
-func (c *Client) List(database string) ([]*Pair, error) {
+func (c *Client) List(database string) (*protocols.ListResponse, error) {
 	body, err := c.get("/"+database, nil)
 	if err != nil {
 		return nil, err
 	}
-	r := &ListResponse{}
+	r := &protocols.ListResponse{}
 	err = json.Unmarshal(body, r)
 	if err != nil {
 		return nil, err
 	}
-	if r.Status != http.StatusOK {
-		return nil, fmt.Errorf("something went wrong: status = %v", r.Status)
-	}
-	return r.Body, nil
+	return r, nil
 }
 
-func (c *Client) Set(database string, key string, value string) error {
+func (c *Client) Set(database string, key string, value string, ttl int) (*protocols.SetResponse, error) {
 	body, err := c.post("/"+database, map[string]string{
 		"key":   key,
 		"value": value,
+		"ttl":   strconv.Itoa(ttl),
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	r := &SetResponse{}
+	r := &protocols.SetResponse{}
 	err = json.Unmarshal(body, r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if r.Status != http.StatusCreated {
-		return fmt.Errorf("failed to set %v/%v: status = %v", database, key, r.Status)
-	}
-	return nil
+	return r, nil
 }
 
-func (c *Client) Delete(database string, key string) error {
+func (c *Client) Delete(database string, key string) (*protocols.DeleteResponse, error) {
 	requestURL := c.BaseURL + "/" + database + "/" + key
-	_, err := c._delete(requestURL)
-	return err
+	body, err := c._delete(requestURL)
+	if err != nil {
+		return nil, err
+	}
+	r := &protocols.DeleteResponse{}
+	err = json.Unmarshal(body, r)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
 }
 
-func (c *Client) NewDB(database string, diskless bool) error {
+func (c *Client) NewDB(database string, diskless bool) (*protocols.NewDBResponse, error) {
 	dl := "false"
 	if diskless {
 		dl = "true"
@@ -90,15 +91,12 @@ func (c *Client) NewDB(database string, diskless bool) error {
 		"database": database,
 		"diskless": dl,
 	})
-	r := &NewDBResponse{}
+	r := &protocols.NewDBResponse{}
 	err = json.Unmarshal(body, r)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if r.Status != http.StatusCreated {
-		return fmt.Errorf("failed to create %v: status = %v", database, r.Status)
-	}
-	return err
+	return r, nil
 }
 
 func (c *Client) get(endpoint string, queries map[string]string) ([]byte, error) {

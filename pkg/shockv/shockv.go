@@ -65,7 +65,11 @@ func (db *ShockV) Get(databaseName string, key string) (string, error) {
 	return get(db.dbs[databaseName], key)
 }
 
-func (db *ShockV) Set(databaseName string, key string, value string) error {
+func (db *ShockV) Set(databaseName string, key string, value string, ttl int) error {
+	if ttl > 0 {
+		duration := time.Duration(ttl) * time.Second
+		return setWithTTL(db.dbs[databaseName], key, value, duration)
+	}
 	return set(db.dbs[databaseName], key, value)
 }
 
