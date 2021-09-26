@@ -26,32 +26,43 @@ shockv server start
 
 CRUD method is available through REST API. ShockV provides CLI client to ease interaction with ShockV.
 
-To make database:
+**To make database:**
 
 ```
-shockv client new --database hello --diskless false
-curl "http://localhost:8080/new?database=hello&diskless=false"
+$ shockv client new --database hello --diskless false
+$ curl "http://localhost:8080/new?database=hello&diskless=false"
+{"status":201,"message":""}
 ```
 
 if you set `--diskless` to `true` the database will be a diskless one and does not preserve data when server is down.
 
-Setting data:
+**Setting data:**
 
 ```
-shockv client set --database hello --key 1 --value "xyz, abc"
-curl -X POST -H "Content-Type: application/json" -d '{"key": "1", "value": "xyz, abc"}' http://localhost:8080/hello
+$ shockv client set --database hello --key 1 --value "xyz, abc"
+$ curl -X POST -H "Content-Type: application/json" -d '{"key": "1", "value": "xyz, abc"}' http://localhost:8080/hello
+{"status":201,"message":""}
 ```
+You can also set TTL by setting `--ttl` more than 0.
 
-Getting the value:
+**Getting the value:**
 
 ```
 shockv client get --database hello --key 1
 curl localhost:8080/hello/1
+{"status":200,"message":"","body":"xyz, abc"}
 ```
 
-Deleting the data:
+```
+shockv client list --database hello
+curl localhost:8080/hello
+{"status":200,"message":"","body":[{"key":"1","value":"xyz, abc"}]}
+```
+
+**Deleting the data:**
 
 ```
 shockv client delete --database hello --key 1
 curl -X DELETE http://localhost:8080/hello/1
+{"status":200,"message":""}
 ```
