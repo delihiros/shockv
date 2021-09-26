@@ -3,6 +3,7 @@ package client
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -33,6 +34,9 @@ func (c *Client) Get(database string, key string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if r.Status != http.StatusOK {
+		return "", fmt.Errorf("not found %v/%v: status = %v", database, key, r.Status)
+	}
 	return r.Body, nil
 }
 
@@ -45,6 +49,9 @@ func (c *Client) List(database string) ([]*Pair, error) {
 	err = json.Unmarshal(body, r)
 	if err != nil {
 		return nil, err
+	}
+	if r.Status != http.StatusOK {
+		return nil, fmt.Errorf("something went wrong: status = %v", r.Status)
 	}
 	return r.Body, nil
 }
@@ -62,6 +69,9 @@ func (c *Client) Set(database string, key string, value string) error {
 	if err != nil {
 		return err
 	}
+	if r.Status != http.StatusCreated {
+		return fmt.Errorf("failed to set %v/%v: status = %v", database, key, r.Status)
+	}
 	return nil
 }
 
@@ -76,10 +86,18 @@ func (c *Client) NewDB(database string, diskless bool) error {
 	if diskless {
 		dl = "true"
 	}
-	_, err := c.get("/new", map[string]string{
+	body, err := c.get("/new", map[string]string{
 		"name":     database,
 		"diskless": dl,
 	})
+	r := &NewDBResponse{}
+	err = json.Unmarshal(body, r)
+	if err != nil {
+		return err
+	}
+	if r.Status != http.StatusCreated {
+		return fmt.Errorf("failed to create %v: status = %v", database, r.Status)
+	}
 	return err
 }
 

@@ -34,69 +34,64 @@ var (
 	newCmd = &cobra.Command{
 		Use:   "new",
 		Short: "create new database",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
 			err := c.NewDB(databaseName, diskless)
 			if err != nil {
 				log.Println(err)
 			}
-			return nil
 		},
 	}
 
 	getCmd = &cobra.Command{
 		Use:   "get",
 		Short: "get value by key",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
 			v, err := c.Get(databaseName, key)
 			if err != nil {
 				log.Println(err)
-				return err
+			} else {
+				jsonutil.PrintJSON(v, format)
 			}
-			return jsonutil.PrintJSON(v, format)
 		},
 	}
 
 	setCmd = &cobra.Command{
 		Use:   "set",
 		Short: "set value by key",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
 			err := c.Set(databaseName, key, value)
 			if err != nil {
 				log.Println(err)
-				return err
 			}
-			return nil
 		},
 	}
 
 	listCmd = &cobra.Command{
 		Use:   "list",
 		Short: "list keys and values",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
 			kv, err := c.List(databaseName)
 			if err != nil {
 				log.Println(err)
-				return err
+			} else {
+				jsonutil.PrintJSON(kv, format)
 			}
-			return jsonutil.PrintJSON(kv, format)
 		},
 	}
 
 	delCmd = &cobra.Command{
 		Use:   "delete",
 		Short: "delete by key",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			c := client.New(serverURL, port)
 			err := c.Delete(databaseName, key)
 			if err != nil {
 				log.Println(err)
-				return err
 			}
-			return nil
 		},
 	}
 
