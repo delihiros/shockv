@@ -87,7 +87,7 @@ func (c *Client) NewDB(database string, diskless bool) error {
 		dl = "true"
 	}
 	body, err := c.get("/new", map[string]string{
-		"name":     database,
+		"database": database,
 		"diskless": dl,
 	})
 	r := &NewDBResponse{}

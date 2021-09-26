@@ -18,11 +18,11 @@ func New() *Server {
 
 	// Routes
 	e.GET("/new", newDB)
-	e.GET("/:dbname", list)
-	e.GET("/:dbname/:key", get)
-	e.POST("/:dbname", set)
-	e.PUT("/:dbname/:key", set)
-	e.DELETE("/:dbname/:key", delete)
+	e.GET("/:database", list)
+	e.GET("/:database/:key", get)
+	e.POST("/:database", set)
+	e.PUT("/:database/:key", set)
+	e.DELETE("/:database/:key", delete)
 	return &Server{
 		e: e,
 	}
