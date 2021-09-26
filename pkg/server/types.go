@@ -1,7 +1,8 @@
 package server
 
 type Response struct {
-	Status int `json:"status"`
+	Status  int    `json:"status"`
+	Message string `json:"message"`
 }
 
 type GetRequest struct {

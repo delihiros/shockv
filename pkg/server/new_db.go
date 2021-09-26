@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/delihiros/shockv/pkg/shockv"
@@ -11,7 +12,11 @@ import (
 func newDB(c echo.Context) error {
 	var req NewDBRequest
 	if err := c.Bind(&req); err != nil || req.Database == "" {
-		return c.JSON(http.StatusBadRequest, NewDBResponse{Response: &Response{Status: 400}})
+		return c.JSON(http.StatusBadRequest, NewDBResponse{
+			Response: &Response{
+				Status:  400,
+				Message: fmt.Sprintf("err: %v", err),
+			}})
 	}
 	db, err := shockv.Get()
 	if err != nil {
