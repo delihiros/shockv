@@ -10,7 +10,7 @@ import (
 
 func newDB(c echo.Context) error {
 	var req NewDBRequest
-	if err := c.Bind(&req); err != nil || req.Name == "" {
+	if err := c.Bind(&req); err != nil || req.Database == "" {
 		return c.JSON(http.StatusBadRequest, NewDBResponse{Response: &Response{Status: 400}})
 	}
 	db, err := shockv.Get()
@@ -18,12 +18,12 @@ func newDB(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, NewDBResponse{Response: &Response{Status: 500}})
 	}
 	if req.Diskless {
-		err = db.NewDisklessDB(req.Name)
+		err = db.NewDisklessDB(req.Database)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, NewDBResponse{Response: &Response{Status: 500}})
 		}
 	} else {
-		err = db.NewDiskDB(req.Name)
+		err = db.NewDiskDB(req.Database)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, NewDBResponse{Response: &Response{Status: 500}})
 		}

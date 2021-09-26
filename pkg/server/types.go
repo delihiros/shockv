@@ -5,8 +5,8 @@ type Response struct {
 }
 
 type GetRequest struct {
-	DatabaseName string `param:"dbname"`
-	Key          string `param:"key"`
+	Database string `param:"database"`
+	Key      string `param:"key"`
 }
 
 type GetResponse struct {
@@ -15,9 +15,9 @@ type GetResponse struct {
 }
 
 type SetRequest struct {
-	DatabaseName string `param:"dbname"`
-	Key          string `form:"key" json:"key" xml:"key"`
-	Value        string `form:"value" json:"value" xml:"value"`
+	Database string `param:"database"`
+	Key      string `form:"key" json:"key" xml:"key"`
+	Value    string `form:"value" json:"value" xml:"value"`
 }
 
 type SetResponse struct {
@@ -25,7 +25,7 @@ type SetResponse struct {
 }
 
 type ListRequest struct {
-	DatabaseName string `param:"dbname"`
+	Database string `param:"database"`
 }
 
 type ListResponse struct {
@@ -34,8 +34,8 @@ type ListResponse struct {
 }
 
 type DeleteRequest struct {
-	DatabaseName string `param:"dbname"`
-	Key          string `param:"key"`
+	Database string `param:"database"`
+	Key      string `param:"key"`
 }
 
 type DeleteResponse struct {
@@ -43,7 +43,7 @@ type DeleteResponse struct {
 }
 
 type NewDBRequest struct {
-	Name     string `query:"name"`
+	Database string `query:"database"`
 	Diskless bool   `query:"diskless"`
 }
 
