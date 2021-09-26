@@ -24,17 +24,28 @@ To make database:
 
 ```
 shockv client new --database hello --diskless false
+curl "http://localhost:8080/new?database=hello&diskless=false"
 ```
+
 if you set `--diskless` to `true` the database will be a diskless one and does not preserve data when server is down.
 
 Setting data:
 
 ```
 shockv client set --database hello --key 1 --value "xyz, abc"
+curl -X POST -H "Content-Type: application/json" -d '{"key": "1", "value": "xyz, abc"}' "http://localhost:8080/hello" -v
 ```
 
 Getting the value:
 
 ```
 shockv client get --database hello --key 1
+curl localhost:8080/hello/1
+```
+
+Deleting the data:
+
+```
+shockv client delete --database hello --key 1
+curl -X DELETE "http://localhost:8080/hello/1"
 ```
