@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	c := client.New("http://localhost:8080")
+	c := client.New("http://localhost", 8080)
 	database := "hello"
 	err := c.NewDB(database, true)
 	if err != nil {
